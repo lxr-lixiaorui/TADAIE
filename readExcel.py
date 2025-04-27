@@ -92,7 +92,7 @@ def submit_answer():
     
     system_prompt = f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
                 1.请以托福官方评分标准为基准打分 \
-                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制的评分，同时给出一个综合的5分(加权平均数，Content Relevance和linguistic expression各占30%,其余两项各占20%)和转化后的30分评分(转化规则可根据y = 5x+5后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
+                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制（一般范围在1.2-5.0之间）的评分，同时给出一个综合的5分(加权平均数，Content Relevance和linguistic expression各占30%,其余两项各占20%)和转化后的30分评分(转化规则可根据y = 5x+5后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
                 基于我的文章（不要改变大概的思路结构）给出一些可行的修改建议，对于C来说，修改错词，并给出一些重复词和过于简单的词的替换词(至少4组，每一组给出至少两个替换词)，最终输出一篇相对完整的文章（限制在250单词以内且符合你的建议），不要用数据论证。 \
                 输出格式如下：\
                 [30分分数]@@@[5分分数]@@@[A项的5分分数]@@@[B项的5分分数]@@@[C项的5分分数]@@@[D项的5分分数]@@@[A的问题]@@@[B的问题]@@@[C的问题]@@@[D的问题]@@@[A的优化方案]@@@[B的优化方案]@@@[C的优化方案]@@@[D的优化方案]@@@[最后呈现的文章] \
@@ -110,7 +110,7 @@ def submit_answer():
             messages=[
                 {"role": "system", "content": system_prompt
                 },
-                {"role": "user", "content": f"请用刚才的标准评分，题目信息:{toEvaluateProblem}, 写作答案:{toEvaluateAnswer}，示例答案（官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路）:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num]}"},
+                {"role": "user", "content": f"请用刚才的标准评分，题目信息:'{toEvaluateProblem}', 写作答案:'{toEvaluateAnswer}'，示例答案（评分不要考虑示例答案！！！，只针对前面的写作答案）（官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路）:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num]}"},
             ],
             stream=False
         )
