@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request,jsonify
+from generateReport import generateReport
 app = Flask(__name__)
 
 def extract_data_from_file(file_path):
@@ -92,7 +93,7 @@ def submit_answer():
     
     system_prompt = f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
                 1.请以托福官方评分标准为基准打分 \
-                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制（一般范围在1.2-5.0之间）的评分，同时给出一个综合的5分(加权平均数，Content Relevance和linguistic expression各占30%,其余两项各占20%)和转化后的30分评分(转化规则可根据y = 5x+5后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
+                请你输出以下内容，严格按照以下标准：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制（一般范围在0.0-5.0之间）的评分，同时给出一个综合的5分(加权平均数，Content Relevance和linguistic expression各占30%,其余两项各占20%)和转化后的30分评分(转化规则严格！！根据y = 5x+5后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
                 基于我的文章（不要改变大概的思路结构）给出一些可行的修改建议，对于C来说，修改错词，并给出一些重复词和过于简单的词的替换词(至少4组，每一组给出至少两个替换词)，最终输出一篇相对完整的文章（限制在250单词以内且符合你的建议），不要用数据论证。 \
                 输出格式如下：\
                 [30分分数]@@@[5分分数]@@@[A项的5分分数]@@@[B项的5分分数]@@@[C项的5分分数]@@@[D项的5分分数]@@@[A的问题]@@@[B的问题]@@@[C的问题]@@@[D的问题]@@@[A的优化方案]@@@[B的优化方案]@@@[C的优化方案]@@@[D的优化方案]@@@[最后呈现的文章] \
@@ -101,9 +102,11 @@ def submit_answer():
                 注意： 仅评价“写作答案”，你的评分和改进措施不应该包含{nameA}和{nameB}的回答！"
     
     
-    
-    
     debug_mode = False
+    if toEvaluateAnswer[0:10] == "debug:True":
+        debug_mode = True
+
+
     if not debug_mode:
         response = client.chat.completions.create(
             model="deepseek-reasoner",
@@ -117,7 +120,9 @@ def submit_answer():
 
         extractedAiResponse = response.choices[0].message.content
         extractedAiResponse = extractedAiResponse.replace("***","\n<br/>\n",-1)
-        entryList = extractedAiResponse.split('@@@')
+
+        entryList = extractedAiResponse.split('@@@') 
+        entryList = entryList + [generateReport(*entryList,toEvaluateAnswer,question_num)]
         # for i in entryList:
         #     print(i)
         return jsonify(entryList)
@@ -125,6 +130,8 @@ def submit_answer():
         extractedAiResponse = "27@@@4.2@@@4.0@@@3.8@@@3.5@@@3.8@@@1. 未直接回应教授问题的'positive/negative'核心框架***2. 企业案例与个人网购的衔接不够紧密@@@1. 企业案例缺少对'效率提升'的具体解释***2. 个人网购段落缺乏对'安全保障'的展开@@@1. 拼写错误：internat→internet***2. 重复词：definitely(3次)→certainly/unquestionably***3. 基础词：good→commodity/product***4. 简单词：make→facilitate/enable@@@1. 段落间过渡生硬***2. 结论缺乏分论点总结@@@A. 在首段明确立场'This is undoubtedly positive'***B. 增加过渡句'While corporate benefits are evident, individuals also gain...'@@@B. 解释'跨国支付如何缩短交易时间'***说明'支付安全如何防止欺诈'@@@C. 错误修正：***1. evlution→evolution***2. boarder→boundaries***3. perchase→purchase***4. sonsiderably→considerably***替换建议：***1. definately→undoubtedly/certainly***2. payment→transaction/digital currency***3. improve→enhance/optimize***4. range→spectrum/diversity@@@D. 添加连接词'Furthermore/Moreover'***结论总结分论点'global accessibility and personal convenience'@@@In the internet era, the evolution of payment systems has undoubtedly enhanced transactional convenience while expanding commercial boundaries. I firmly believe this shift is positive as it creates unprecedented opportunities for both businesses and individuals.***While traditional cash limits transactions to local merchants, digital currency enables effortless global commerce. Consider multinational corporations in Asia requiring daily transfers of millions to European partners. Physical cash transportation would be impractical, but through secure platforms like VISA, such complex transactions conclude within seconds. This efficiency not only optimizes operational processes but also fuels international trade in our globalized economy.***Furthermore, digital transactions empower individual consumers. The instantaneous nature of online payments, coupled with robust security measures, facilitates seamless e-commerce experiences. Users can confidently purchase specialized products from overseas vendors—opportunities unimaginable in the cash-dominant era. Unlike physical currency that restricts shopping to neighborhood stores, digital systems provide access to a global marketplace, dramatically enriching consumer choices.***The transition to cashless systems ultimately fosters economic connectivity on an unprecedented scale. By eliminating geographical constraints and ensuring transaction reliability, modern payment methods lay the foundation for a more integrated world economy, benefiting enterprises and consumers alike through enhanced accessibility and operational efficiency. (229 words)" 
         extractedAiResponse = extractedAiResponse.replace("***","\n<br/>\n",-1)
         entryList = extractedAiResponse.split('@@@')
+        entryList = entryList + [generateReport(*entryList,toEvaluateAnswer,question_num)]
+        print(entryList)
         return jsonify(entryList)
 
     

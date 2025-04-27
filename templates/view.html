@@ -86,6 +86,10 @@
                             document.getElementById("imprD").innerHTML = "-" +imprD
                             const rewr = receivedList[14]
                             document.getElementById("rewr").innerHTML = rewr
+                            const reportPath = receivedList[15]
+                            const downloadLabal = document.getElementById('downloadReport')
+                            downloadLabal.href = reportPath
+                            console.log(reportPath)
                         } else {
                             console.error('Request failed:', xhr.status);
                         }
@@ -94,8 +98,8 @@
                     xhr.onerror = function() {
                         console.error('Network error');
                     };
-                    console.log(inputtext)
-                    console.log(encodeURIComponent(inputtext))
+                    // console.log(inputtext)
+                    // console.log(encodeURIComponent(inputtext))
                     xhr.send(`answer=${encodeURIComponent(inputtext)}`);
                 }
 
@@ -195,7 +199,7 @@
         </div>
         <div class="mt-6">
             <textarea style="height: 385px; border-style: solid; border-width:4px; border-color:rgb(60, 87, 224); background-color: azure;" id="input-text" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Your response here"></textarea>
+                placeholder="Your response here(debug:True to debug)"></textarea>
             <div class="flex justify-end mt-2">
                 <span>Word Count: <span id="word-count-value">0</span></span>
             </div>
@@ -207,6 +211,7 @@
     <div class="container mx-auto bg-white rounded-lg shadow-lg p-6" id="reportborder" style="display: none;">
         <div >
             <h1 style="font-size: 45px;">Deepseek Evaluation Report</h1>
+            <a id='downloadReport' href="" download="" style="color: cadetblue;text-underline-position: below;">Download Report · HTML Version</a>
             <h1 style="font-size: 9px; color:rgb(156, 155, 155)" id="geninfo">GenerateTime: {{time}}             ·            Question: {{questionNum}}</h1>
             <br/>
             
@@ -274,7 +279,7 @@
         let timeLeft = 600; // seconds
         function reset(){
             timeLeft=600
-            console.log("success")
+            // console.log("success")
         }
         const timerInterval = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60);
