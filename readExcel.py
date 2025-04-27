@@ -89,41 +89,28 @@ def submit_answer():
     I agree that very young children shouldn't be exposed to videos. However, I believe that older children can benefit from watching certain videos, especially those that showcase animals or provide unique insights not easily encountered in everyday life. These videos can be educational and expand their horizons by offering a window into experiences they might not otherwise have access to."
 
     exampleAnswer2: str = " I am more inclined to agree that a boarding school system is beneficial.Firstly,a boarding school is a place whereyou can make friends with your classmates The 'roommate'relationship is somewhat strong that you may remember forever, as you wake up, eat meals, study, and go to sleep together with your roommates onevery school days. Secondly,a boarding school is usually close to your school campus, which means that you donot need to commute to and from school every day.Thirdly ,a boarding school is not a placemerelyfora disciplined life; it often conducts various activities to help you get immersed in the living environment and make your lifemore colorful, which cannot be experienced at home.I personally do not agree with Andrew's point that boarding school places high mental pressure on students, as boarding schools are not prisons and students are still free to leave on weekends to bond with their family and pursue their interests."
-    debug_mode = False
-    if not debug_mode:
-        print("Ai generating... Please wait for about 30 seconds!")
-        print(f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
+    
+    system_prompt = f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
                 1.请以托福官方评分标准为基准打分 \
-                2.跟着两个学生写是一种写法，但并不意味着文章中必须要回应所有学生的观点，因此若缺少对学生观点的回应，不要因此扣分 \
-                3.例子中不需要数据支撑，若缺少一些具体统计数据导致的说服力不足，请不要扣分 \
-                4.仅评价user content中的写作答案，不要评价两个学生的答案。 \
-                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制的评分，同时给出一个综合的5分和转化后的30分评分(转化规则可根据y = -4.8524x + 53.4286后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
-                基于我的文章（不要改变大概的思路结构）给出一些可行的修改建议，对于C来说，修改错词，并给出一些重复词和过于简单的词的替换词(至少4组，每一组给出至少两个替换词)，最终输出一篇相对完整的文章（限制在250单词以内且符合你的建议），不要用数据论证。 \
-                输出格式如下：\
-                [30分分数]@@@[5分分数]@@@[A项的5分分数]@@@[B项的5分分数]@@@[C项的5分分数]@@@[D项的5分分数]@@@[A的问题]@@@[B的问题]@@@[C的问题]@@@[D的问题]@@@[A的优化方案]@@@[B的优化方案]@@@[C的优化方案]@@@[D的优化方案]@@@[最后呈现的文章] \
-                注意事项：1. 30分分数显示成xx的整数格式(如27) 2. 所有5分分数直接显示成x.x的一位小数浮点格式(如4.2) 3. 请将生成的相应内容替换回答中的[]内容 4. 其中不同内容直接像上方一样使用'@@@'连接，便于分割 5. 所有换行符请替换成'***'，便于识别，不要直接换行！ 6.除了文章、引用文章、替换词使用英文外，其他请用中文 7.使用单引号而非双引号 8. 严格按照以上的格式，不要添加其他内容！\
-                输入格式(非内容)样例：27@@@4.2@@@4.0@@@3.8@@@3.5@@@3.8@@@1. 未直接回应教授问题的'positive/negative'核心框架***2. 企业案例与个人网购的衔接不够紧密@@@1. 企业案例缺少对'效率提升'的具体解释***2. 个人网购段落缺乏对'安全保障'的展开@@@1. 拼写错误：internat→internet***2. 重复词：definitely(3次)→certainly/unquestionably***3. 基础词：good→commodity/product***4. 简单词：make→facilitate/enable@@@1. 段落间过渡生硬***2. 结论缺乏分论点总结@@@A. 在首段明确立场'This is undoubtedly positive'***B. 增加过渡句'While corporate benefits are evident, individuals also gain...'@@@B. 解释'跨国支付如何缩短交易时间'***说明'支付安全如何防止欺诈'@@@C. 错误修正：***1. evlution→evolution***2. boarder→boundaries***3. perchase→purchase***4. sonsiderably→considerably***替换建议：***1. definately→undoubtedly/certainly***2. payment→transaction/digital currency***3. improve→enhance/optimize***4. range→spectrum/diversity@@@D. 添加连接词'Furthermore/Moreover'***结论总结分论点'global accessibility and personal convenience'@@@In the internet era, the evolution of payment systems has undoubtedly enhanced transactional convenience while expanding commercial boundaries. I firmly believe this shift is positive as it creates unprecedented opportunities for both businesses and individuals.***While traditional cash limits transactions to local merchants, digital currency enables effortless global commerce. Consider multinational corporations in Asia requiring daily transfers of millions to European partners. Physical cash transportation would be impractical, but through secure platforms like VISA, such complex transactions conclude within seconds. This efficiency not only optimizes operational processes but also fuels international trade in our globalized economy.***Furthermore, digital transactions empower individual consumers. The instantaneous nature of online payments, coupled with robust security measures, facilitates seamless e-commerce experiences. Users can confidently purchase specialized products from overseas vendors—opportunities unimaginable in the cash-dominant era. Unlike physical currency that restricts shopping to neighborhood stores, digital systems provide access to a global marketplace, dramatically enriching consumer choices.***The transition to cashless systems ultimately fosters economic connectivity on an unprecedented scale. By eliminating geographical constraints and ensuring transaction reliability, modern payment methods lay the foundation for a more integrated world economy, benefiting enterprises and consumers alike through enhanced accessibility and operational efficiency. (229 words)  \
-                注意： 仅评价“写作答案”，你的评分和改进措施不应该包含{nameA}和{nameB}的回答！")
-        
-        print(f"题目信息:{toEvaluateProblem}, 写作答案:{toEvaluateAnswer}，示例答案（官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路）:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num-1]}")
-        response = client.chat.completions.create(
-            model="deepseek-reasoner",
-            messages=[
-                {"role": "system", "content": f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
-                1.请以托福官方评分标准为基准打分 \
-                2.跟着两个学生写是一种写法，但并不意味着文章中必须要回应所有学生的观点，因此若缺少对学生观点的回应，不要因此扣分 \
-                3.例子中不需要数据支撑，若缺少一些具体统计数据导致的说服力不足，请不要扣分 \
-                4.仅评价user content中的写作答案，不要评价两个学生的答案。 \
-                5.以下给你一些参考基准：Question1：'{exampleQuestion1}', 5分->28-30分回答:'{exampleAnswer1}', 4分->24-25分回答:'{exampleAnswer_4}', 3分->19-21分:'{exampleAnswer_3}'，Question2:'{exampleQuestion2}',5分->28-30分回答:'{exampleAnswer2}' \
-                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制的评分，同时给出一个综合的5分和转化后的30分评分(转化规则可根据y = -4.8524x + 53.4286后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
+                请你输出以下内容：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制的评分，同时给出一个综合的5分(加权平均数，Content Relevance和linguistic expression各占30%,其余两项各占20%)和转化后的30分评分(转化规则可根据y = 5x+5后取整，x为5分制分数，y为30分分数),对A、B、D三个部分来说， \
                 基于我的文章（不要改变大概的思路结构）给出一些可行的修改建议，对于C来说，修改错词，并给出一些重复词和过于简单的词的替换词(至少4组，每一组给出至少两个替换词)，最终输出一篇相对完整的文章（限制在250单词以内且符合你的建议），不要用数据论证。 \
                 输出格式如下：\
                 [30分分数]@@@[5分分数]@@@[A项的5分分数]@@@[B项的5分分数]@@@[C项的5分分数]@@@[D项的5分分数]@@@[A的问题]@@@[B的问题]@@@[C的问题]@@@[D的问题]@@@[A的优化方案]@@@[B的优化方案]@@@[C的优化方案]@@@[D的优化方案]@@@[最后呈现的文章] \
                 注意事项：1. 30分分数显示成xx的整数格式(如27) 2. 所有5分分数直接显示成x.x的一位小数浮点格式(如4.2) 3. 请将生成的相应内容替换回答中的[]内容 4. 其中不同内容直接像上方一样使用'@@@'连接，便于分割 5. 所有换行符请替换成'***'，便于识别，不要直接换行！ 6.除了文章、引用文章、替换词使用英文外，其他请用中文 7.使用单引号而非双引号 8. 严格按照以上的格式，不要添加其他内容！\
                 输入格式(非内容)样例：27@@@4.2@@@4.0@@@3.8@@@3.5@@@3.8@@@1. 未直接回应教授问题的'positive/negative'核心框架***2. 企业案例与个人网购的衔接不够紧密@@@1. 企业案例缺少对'效率提升'的具体解释***2. 个人网购段落缺乏对'安全保障'的展开@@@1. 拼写错误：internat→internet***2. 重复词：definitely(3次)→certainly/unquestionably***3. 基础词：good→commodity/product***4. 简单词：make→facilitate/enable@@@1. 段落间过渡生硬***2. 结论缺乏分论点总结@@@A. 在首段明确立场'This is undoubtedly positive'***B. 增加过渡句'While corporate benefits are evident, individuals also gain...'@@@B. 解释'跨国支付如何缩短交易时间'***说明'支付安全如何防止欺诈'@@@C. 错误修正：***1. evlution→evolution***2. boarder→boundaries***3. perchase→purchase***4. sonsiderably→considerably***替换建议：***1. definately→undoubtedly/certainly***2. payment→transaction/digital currency***3. improve→enhance/optimize***4. range→spectrum/diversity@@@D. 添加连接词'Furthermore/Moreover'***结论总结分论点'global accessibility and personal convenience'@@@In the internet era, the evolution of payment systems has undoubtedly enhanced transactional convenience while expanding commercial boundaries. I firmly believe this shift is positive as it creates unprecedented opportunities for both businesses and individuals.***While traditional cash limits transactions to local merchants, digital currency enables effortless global commerce. Consider multinational corporations in Asia requiring daily transfers of millions to European partners. Physical cash transportation would be impractical, but through secure platforms like VISA, such complex transactions conclude within seconds. This efficiency not only optimizes operational processes but also fuels international trade in our globalized economy.***Furthermore, digital transactions empower individual consumers. The instantaneous nature of online payments, coupled with robust security measures, facilitates seamless e-commerce experiences. Users can confidently purchase specialized products from overseas vendors—opportunities unimaginable in the cash-dominant era. Unlike physical currency that restricts shopping to neighborhood stores, digital systems provide access to a global marketplace, dramatically enriching consumer choices.***The transition to cashless systems ultimately fosters economic connectivity on an unprecedented scale. By eliminating geographical constraints and ensuring transaction reliability, modern payment methods lay the foundation for a more integrated world economy, benefiting enterprises and consumers alike through enhanced accessibility and operational efficiency. (229 words)  \
                 注意： 仅评价“写作答案”，你的评分和改进措施不应该包含{nameA}和{nameB}的回答！"
+    
+    
+    
+    
+    debug_mode = False
+    if not debug_mode:
+        response = client.chat.completions.create(
+            model="deepseek-reasoner",
+            messages=[
+                {"role": "system", "content": system_prompt
                 },
-                {"role": "user", "content": f"题目信息:{toEvaluateProblem}, 写作答案:{toEvaluateAnswer}，示例答案（官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路）:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num]}"},
+                {"role": "user", "content": f"请用刚才的标准评分，题目信息:{toEvaluateProblem}, 写作答案:{toEvaluateAnswer}，示例答案（官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路）:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num]}"},
             ],
             stream=False
         )
