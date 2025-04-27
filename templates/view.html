@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="all.min.css" rel="stylesheet">
+    <title id='stamp'>Discussion Page stamp</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .timer {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px;
+            object-fit: cover;
+        }
+
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div class="container mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div></div>
+            <script>
+                function sendbackresponse() {
+                    alert("AI is now evaluating, please wait for about 1 minute and ensure network connection!")
+                    const submitBtn = document.getElementById('submitting')
+                    const inputtext = document.getElementById('input-text').value;
+                    submitBtn.addEventListener('click', function() {
+                        this.disabled = true;
+                        console.log('按钮已禁用');
+                    })
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/submit_answer', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    
+                    // analysis py json file
+                    xhr.responseType = 'json';  
+
+                    xhr.onload = function() {  
+                        if (xhr.status === 200) {
+                            const reportborder = document.getElementById("reportborder")
+                            //show and set report
+                            reportborder.removeAttribute("style")
+                            const receivedList = xhr.response;
+                            const srcThir = receivedList[0]
+                            const srcFive = receivedList[1]
+                            document.getElementById("src").innerHTML = srcFive+" / "+srcThir
+                            document.getElementById("org").innerHTML = inputtext
+                            const srcA = receivedList[2]
+                            document.getElementById("srcA").innerHTML = srcA
+                            const srcB = receivedList[3]
+                            document.getElementById("srcB").innerHTML = srcB
+                            const srcC = receivedList[4]
+                            document.getElementById("srcC").innerHTML = srcC
+                            const srcD = receivedList[5]
+                            document.getElementById("srcD").innerHTML = srcD
+                            const probA = receivedList[6]
+                            document.getElementById("probA").innerHTML = "-" +probA
+                            const probB = receivedList[7]
+                            document.getElementById("probB").innerHTML = "-" +probB
+                            const probC = receivedList[8]
+                            document.getElementById("probC").innerHTML = "-" +probC
+                            const probD = receivedList[9]
+                            document.getElementById("probD").innerHTML = "-" +probD
+                            const imprA = receivedList[10]
+                            document.getElementById("imprA").innerHTML = "-" +imprA
+                            const imprB = receivedList[11]
+                            document.getElementById("imprB").innerHTML = "-" +imprB
+                            const imprC = receivedList[12]
+                            document.getElementById("imprC").innerHTML = "-" +imprC
+                            const imprD= receivedList[13]
+                            document.getElementById("imprD").innerHTML = "-" +imprD
+                            const rewr = receivedList[14]
+                            document.getElementById("rewr").innerHTML = rewr
+                        } else {
+                            console.error('Request failed:', xhr.status);
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        console.error('Network error');
+                    };
+                    console.log(inputtext)
+                    console.log(encodeURIComponent(inputtext))
+                    xhr.send(`answer=${encodeURIComponent(inputtext)}`);
+                }
+
+            </script>
+            <p style="font: bolder;">@0x14C6</p>
+            <button id="choosepaper" onclick="reset();disableReselecting();changeDisabledColor('choosepaper')" style="color:white; display:flex; padding:12px 10px; border:.5px solid;background-color: rgb(79, 152, 255);border-radius: 5px;">Confirm paper and Restart</button>
+
+            <select id="numberSelector" onchange="sendbackpaper()">-paper-</select>
+            
+            <script>    
+            //generate selector from 1-30
+                const selector = document.getElementById('numberSelector');
+                let optionsHTML = '';
+                for (let i = 1; i <= 45; i++) {
+                    optionsHTML += `<option value="${i}">${i}</option>`;
+                }
+                selector.innerHTML = optionsHTML;
+            </script>
+                <script>
+                function changeDisabledColor(elementid){
+                    const element = document.getElementById(elementid)
+                    element.style.backgroundColor =  "rgb(58, 133, 200)"
+                }
+                function disableReselecting(){
+                    const reselecting = document.getElementById('choosepaper')
+                    reselecting.addEventListener('click', function() {
+                        this.disabled = true;
+                        console.log('按钮已禁用');
+                    })
+                }
+                function sendbackpaper() {
+                    
+                if (document.getElementById('choosepaper').style.color != "rgb(58, 133, 200)"){
+                const selectedValue = document.getElementById("numberSelector").value;
+                
+                fetch('/choose_paper', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `paperNumber=${encodeURIComponent(selectedValue)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        //show and set question
+                        // console.log("Received data:", data.data,data.data.nameA);
+                        document.getElementById("nameA").innerHTML = data.data.nameA
+                        document.getElementById("nameB").innerHTML = data.data.nameB
+                        document.getElementById("nameTea").innerHTML = data.data.nameTea
+                        document.getElementById("stuA").innerHTML = data.data.stuA
+                        document.getElementById("stuB").innerHTML = data.data.stuB
+                        document.getElementById("tea").innerHTML = data.data.tea
+                        document.getElementById("stamp").innerHTML = "Discussion page"+data.data.stamp
+                        document.getElementById("geninfo").innerHTML = data.data.time + "              ·                "+data.data.questionNum
+                    } else {
+                        console.error("Error:", data.error);
+                    }
+                    
+                })
+                .catch(error => console.error('Network error:', error));
+            }}
+            </script>
+            <div class="timer" id="timer">Time Remaining: 00:10:00</div>
+            <button id='submitting' onclick="sendbackresponse();changeDisabledColor('submitting')" style="color:white; display:flex; padding:12px 10px; border:.5px solid;background-color: rgb(79, 152, 255);border-radius: 5px;"> Submit </button>
+        </div>
+        <div class="flex space-x-6">
+            <div class="w-1/4">
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex flex-col items-center">
+                        <img class="avatar" src="static/images/img_teacher_diaz.png" >
+                        <h2 class="text-xl font-bold mt-2" id="nameTea"></h2>
+                    </div>
+                    <p class="mt-4" id="tea"></p>
+                </div>
+            </div>
+            <div class="w-3/4">
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
+                    <div class="flex items-center">
+                        <img class="avatar" src="static/images/img_student_paul.png" >
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold" id="nameA"></h3>
+                        </div>
+                    </div>
+                    <p class="mt-4" id="stuA"></p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <img class="avatar" src="static/images/img_student_kelly.png" >
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold" id="nameB"></h3>
+                        </div>
+                    </div>
+                    <p class="mt-4" id="stuB"></p>
+                </div>
+            </div>
+        </div>
+        <div class="mt-6">
+            <textarea style="height: 385px; border-style: solid; border-width:4px; border-color:rgb(60, 87, 224); background-color: azure;" id="input-text" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your response here"></textarea>
+            <div class="flex justify-end mt-2">
+                <span>Word Count: <span id="word-count-value">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    
+    <div class="container mx-auto bg-white rounded-lg shadow-lg p-6" id="reportborder" style="display: none;">
+        <div >
+            <h1 style="font-size: 45px;">Deepseek Evaluation Report</h1>
+            <h1 style="font-size: 9px; color:rgb(156, 155, 155)" id="geninfo">GenerateTime: {{time}}             ·            Question: {{questionNum}}</h1>
+            <br/>
+            
+            <h3 style="color:gray; font-size: 18px;">> Total Score(5/30): </h3>
+            <h2  id="src" style='font-size:40px; color:green'>total score 5 / Total score 30</h2>
+                        
+            <br/>
+
+            <h3 style="color:gray; font-size: 18px;">> Breakdown</h3>
+            <div class="grid-container">
+            <div class="item" style="color:gray"><center>Criteria</center></div>
+            <div class="item" style="color:gray" ><center>Score</center></div>
+            <div class="item">Content Relevance</div>
+            <div class="item" id="srcA">Score A</div>
+            <div class="item">Perspectives Expansion</div>
+            <div class="item" id="srcB">Score B</div>
+            <div class="item">Linguistic Expression</div>
+            <div class="item" id="srcC">Score C</div>
+            <div class="item">Logical structure</div>
+            <div class="item" id="srcD">Score D</div>
+            </div>
+            
+            <style>
+            .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 2px; 
+            }
+            .item {
+            padding: 10px;
+            background: #f0f0f0;
+            }
+            </style>
+                        
+            <br/>
+
+            <h3 style="color:gray; font-size: 18px;">> Problem Analysis</h3>
+            <p  id="probA"> - Content Relevence: Problem A</p>
+            <p id="probB"> - Perspectives Expansion: Problem B</p>
+            <p id="probC"> - Linguistic Expression: Problem C</p>
+            <p id="probD"> - Logical structure: Problem D</p>
+            <br/>
+
+            <h3 style="color:gray; font-size: 18px;">> Improvements</h3>
+            <p id="imprA"> - Content Relevence: Impr A</p>
+            <p id="imprB"> - Perspectives Expansion: Impr B</p>
+            <p id="imprC"> - Linguistic Expression: Impr C</p>
+            <p id="imprD"> - Logical structure: Impr D</p>
+                        
+            <br/>
+
+            <h3 style="color:gray; font-size: 18px;">> AI Rewrite</h3>
+            <p id="rewr"> writ</p>
+
+            <br/><br/>
+
+            <h3 style="color:gray; font-size: 18px;">> Your Answer</h3>
+            <p id="org"> writ</p>
+            </div>
+    </div>
+    <script>
+        // clock
+        const timer = document.getElementById("timer");
+        const timerElement = document.querySelector('.timer');
+        let timeLeft = 600; // seconds
+        function reset(){
+            timeLeft=600
+            console.log("success")
+        }
+        const timerInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `Time Remaining: 00:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timeLeft === 0) {
+                clearInterval(timerInterval);
+                alert("Time is over!");
+                
+            }
+            if ((timeLeft % 60 === 0) && (timeLeft <= 300)) {
+                timer.style.color = "red";
+            } else {
+                timer.style.color = "black";
+            }
+            timeLeft--;
+        }, 1000);
+
+        // prevent refreshing
+        window.onbeforeunload = function(e) {
+            e.preventDefault();
+            e.returnValue = "确定要离开吗？未保存的更改可能会丢失！";
+            return e.returnValue;
+        };
+        // number of words
+        const inputText = document.getElementById('input-text');
+        const wordCountValue = document.getElementById('word-count-value');
+        // use regex to count words
+        inputText.addEventListener('input', () => {
+            const words = inputText.value.split(/\s+/).filter(word => word.length > 0);
+            wordCountValue.textContent = words.length;
+        });
+    </script>
+</body>
+
+</html>
