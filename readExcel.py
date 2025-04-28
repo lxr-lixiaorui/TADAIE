@@ -78,7 +78,10 @@ def submit_answer():
     toEvaluateAnswer = request.form.get('answer')
     from openai import OpenAI
 
-    client = OpenAI(api_key="sk-99e5773a62c7437294d25242d139d169", base_url="https://api.deepseek.com")
+    import os
+
+    api_key = os.getenv('API_KEY')
+    client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
     toEvaluateProblem = question
 
