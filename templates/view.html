@@ -27,6 +27,7 @@
         textarea {
             resize: none;
         }
+        
     </style>
 </head>
 
@@ -36,6 +37,8 @@
             <div></div>
             <script>
                 function sendbackresponse() {
+                    const wordCountValue = document.getElementById('word-count-value');
+                    if (Number(wordCountValue) > 20){
                     alert("AI is now evaluating, please wait for about 1 minute and ensure network connection!")
                     const submitBtn = document.getElementById('submitting')
                     const inputtext = document.getElementById('input-text').value;
@@ -101,7 +104,9 @@
                     // console.log(inputtext)
                     // console.log(encodeURIComponent(inputtext))
                     xhr.send(`answer=${encodeURIComponent(inputtext)}`);
-                }
+                } else{
+                    alert("too less words, fail to submit!!")
+                }}
 
             </script>
             <p style="font: bolder;">@0x14C6</p>
