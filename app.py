@@ -80,12 +80,12 @@ def submit_answer():
 
     import os
 
-    api_key = os.getenv('API_KEY')
+    api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
     toEvaluateProblem = question
 
-    exampleQuestion1: str = "Dr. Achebe \
+    exampleQuestion1: str = "Dr.    qAchebe \
     This week we analyzed some aspects of current educational systems. One type of school system we discussed was boarding schools, which, as the name suggests,is a type of school where students live during the school year. I would like you to discuss whether you consider boarding schools beneficial for students education or whether you think day schools, or.schools where students do not liveat the schools,are better formost students.Explain why you think so. \
     Claire \
     I would have loved to have attended aboarding school.I feel like board- ing schools would have helped me establish a strict daily routineand helped me become more disciplined. Also, being in a boarding school means that you are with friends and classmates around the clock,and I would have loved such an opportunity. \
