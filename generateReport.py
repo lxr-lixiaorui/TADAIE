@@ -21,7 +21,7 @@ def generateReport(srcthirty,srcfive,srcA,srcB,srcC,srcD,probA,probB,probC,probD
             <br/>
             
             <h3 style="color:gray; font-size: 18px;">> Total Score(5/30): </h3>
-            <h2  id="src" style='font-size:40px; color:green'>{srcfive} / {srcthirty}</h2>
+            <h2  id="src" style='font-size:40px; color:green'>{srcfive} / {srcthirty:.2sf}</h2>
                         
             <br/>
 
