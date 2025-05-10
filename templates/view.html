@@ -282,7 +282,7 @@
         // clock
         const timer = document.getElementById("timer");
         const timerElement = document.querySelector('.timer');
-        let timeLeft = 600; // seconds
+        let timeLeft = 10; // seconds
         function reset(){
             timeLeft=600
             // console.log("success")
@@ -294,6 +294,11 @@
             if (timeLeft === 0) {
                 clearInterval(timerInterval);
                 alert("Time is over!");
+                const inputTextvalue = document.getElementById('input-text').value;
+                if (inputTextvalue.includes('AllowOvertime:True') == false){
+                sendbackresponse()
+                changeDisabledColor('submitting')
+                }    
                 
             }
             if ((timeLeft % 60 === 0) && (timeLeft <= 300)) {

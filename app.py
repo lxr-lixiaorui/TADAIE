@@ -116,9 +116,8 @@ def submit_answer():
     user_prompt = f"请用刚才的标准评分，不要考虑{nameA}和{nameB}的回答,题目信息:'{toEvaluateProblem}'题目结束, 写作答案:'{toEvaluateAnswer}'写作答案结束，示例答案,评分不要考虑示例答案！！！，只针对前面的写作答案,官方评分28-30，仅参考内容，实际写作中可以有不同的展开思路:{extract_answer_from_file('static/table/2023_AcaTalk_Answer.txt')[question_num]}"
     debug_mode = False
     doGenerateReport = True
-    if toEvaluateAnswer[0:10] == "debug:True":
+    if 'debug:True' in toEvaluateAnswer:
         debug_mode = True
-    
 
 
     if not debug_mode:
