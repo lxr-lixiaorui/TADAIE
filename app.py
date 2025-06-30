@@ -30,9 +30,11 @@ def extract_answer_from_file(file_path):
         return lines
 file_path = 'static/table/2023_AcaTalk.txt '
 result = extract_data_from_file(file_path)
+print(len(result))
 @app.route('/choose_paper', methods=['POST'])
 def choose_paper():
-    try:
+    # try:
+    if True:
         global question_num
         question_num = int(request.form.get("paperNumber"))
         
@@ -64,10 +66,10 @@ def choose_paper():
             }
         })
         
-    except ValueError:
-        return "Invalid paper number", 400
-    except Exception as e:
-        return f"Error: {str(e)}", 500
+    # except ValueError:
+    #     return "Invalid paper number", 400
+    # except Exception as e:
+    #     return f"Error: {str(e)}", 500
 @app.route('/')
 def view():
     return render_template('view.html')
@@ -103,9 +105,9 @@ def submit_answer():
 
     exampleAnswer2: str = " I am more inclined to agree that a boarding school system is beneficial.Firstly,a boarding school is a place whereyou can make friends with your classmates The 'roommate'relationship is somewhat strong that you may remember forever, as you wake up, eat meals, study, and go to sleep together with your roommates onevery school days. Secondly,a boarding school is usually close to your school campus, which means that you donot need to commute to and from school every day.Thirdly ,a boarding school is not a placemerelyfora disciplined life; it often conducts various activities to help you get immersed in the living environment and make your lifemore colorful, which cannot be experienced at home.I personally do not agree with Andrew's point that boarding school places high mental pressure on students, as boarding schools are not prisons and students are still free to leave on weekends to bond with their family and pursue their interests."
     
-    system_prompt = f"你现在是一名托福考官，需要给学术讨论话题评分。以下是一些评分标准：\
+    system_prompt = f"你现在是一名托福考官，需要给学术讨论话题评分，严格评分。以下是一些评分标准：对观点的论述要详尽深入，有效表达至少80词才算论述完整，对重复观点而不举例子说明或进一步解释的要在逻辑分中扣分，注意事项如下：\
                 1.请以托福官方评分标准为基准打分 \
-                请你输出以下内容，严格按照以下标准：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制（一般范围在0.0-5.0之间）的评分,对A、B、D三个部分来说， \
+                请你输出以下内容，严格按照以下标准：从4个部分（A内容相关度，B观点展开，C语言表达，D逻辑结构）分别给出5分制，范围在0.0-5.0之间的评分，,对A、B、D三个部分来说， \
                 基于我的文章（不要改变大概的思路结构）给出一些可行的修改建议，对于C来说，修改错词，并给出一些重复词和过于简单的词的替换词(至少4组，每一组给出至少两个替换词)，最终输出一篇相对完整的文章，限制在190单词以内且符合你的建议，不要用数据论证。 \
                 输出格式如下：\
                 [A项的5分分数]@@@[B项的5分分数]@@@[C项的5分分数]@@@[D项的5分分数]@@@[A的问题]@@@[B的问题]@@@[C的问题]@@@[D的问题]@@@[A的优化方案]@@@[B的优化方案]@@@[C的优化方案]@@@[D的优化方案]@@@[最后呈现的文章] \

@@ -34,7 +34,6 @@ After these steps, run **app.py**, after a few seconds, enter the website in the
 
 - Then, start composing your article, after finishing, click <p style="color:blue; border: 4px soild">'Submit'</p>You need to wait for about one minute(Maybe a process bar will be add later :) ), and the report will appear, click the word: *"Download Report · HTML Version"* to download the report(Maybe a PDF version will be available soon :) )
 
-
 ## key codes
 - If **debug:True** is in your response, then it'll return a fixed, pre-generated report, which is convenient to debug and add new features without consuming usage of your API.
 
